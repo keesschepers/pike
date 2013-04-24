@@ -117,6 +117,11 @@ abstract class AbstractDataSource implements \Countable
         }
     }
 
+    public function getSorts()
+    {
+        return $this->sorts;
+    }
+
     /**
      * Adds a sort to the data source for sorting the results
      *
