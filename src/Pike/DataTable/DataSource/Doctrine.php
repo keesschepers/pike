@@ -232,7 +232,9 @@ class Doctrine extends AbstractDataSource implements DataSourceInterface
      */
     protected function getSortQueryHints()
     {
-        if (count($sorts = $this->getSorts()) === 0) {
+        $sorts = $this->getSorts();
+
+        if (count($sorts) === 0) {
             return null;
         }
 
