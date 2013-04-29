@@ -5,6 +5,7 @@ namespace Pike\DataTable\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Pike\DataTable;
 
 class DataTableHelper extends AbstractHelper implements ServiceLocatorAwareInterface
 {
@@ -35,15 +36,19 @@ class DataTableHelper extends AbstractHelper implements ServiceLocatorAwareInter
         return $this->serviceLocator;
     }
 
-    public function __invoke($dataTableService)
+    public function __invoke($dataTableService, array $attributes = array())
     {
         $serviceManager = $this->getServiceLocator()->getServiceLocator();
         $service = $serviceManager->get($dataTableService);
 
-        if (false === $service instanceof \Pike\DataTable) {
+        if (false === $service instanceof DataTable) {
             throw new \RuntimeException(sprintf('%s is not a Pike\DataTable', get_class($service)));
         }
 
+        if (count($attributes) > 0) {
+            $attributes = array_merge($service->getAdapter()->getAttributes(), $attributes);
+            $service->getAdapter()->setAttributes($attributes);
+        }
         return $service->render();
     }
 

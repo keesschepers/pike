@@ -1,10 +1,11 @@
 <?php
 
-namespace PsOrder\DataTable;
+namespace Pike\DataTable\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Pike\DataTable;
 
 abstract class AbstractDataTableService implements FactoryInterface
 {
@@ -19,12 +20,12 @@ abstract class AbstractDataTableService implements FactoryInterface
      * @param ServiceLocatorInterface|ServiceManager $serviceLocator
      * @return \Pike\DataTable
      */
-    public static function createService(ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->config = $serviceLocator->get('config');
         $this->sm = $serviceLocator;
 
-        return new \Pike\dataTable($this->getAdapter(), $this->getDataSource(), $serviceLocator);
+        return new DataTable($this->getAdapter(), $this->getDataSource(), $serviceLocator);
     }
 
     protected function getConfig()
@@ -58,7 +59,7 @@ abstract class AbstractDataTableService implements FactoryInterface
         $adapter->setParameters($this->getServiceManager()->get('request')->getQuery()->toArray());
 
         if (false === $adapter instanceof Pike\DataTable\Adapter\AdapterInterface) {
-            throw new \RuntimeException(sprintf('%s is not a valid adapter', $strategy);
+            throw new \RuntimeException(sprintf('%s is not a valid adapter', $strategy));
         }
 
         return $adapter;
@@ -85,7 +86,7 @@ abstract class AbstractDataTableService implements FactoryInterface
         $dataSource = new $strategy($configuration['datasource_callback']($this->getServiceManager()));
 
         if (false === $dataSource instanceof Pike\DataTable\DataSource\DataSourceInterface) {
-            throw new \RuntimeException(sprintf('%s is not a valid datasource', $strategy);
+            throw new \RuntimeException(sprintf('%s is not a valid datasource', $strategy));
         }
 
         return $dataSource;
